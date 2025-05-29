@@ -1,46 +1,77 @@
 <template>
-  <div class="max-w-2xl mx-auto p-4 space-y-6">
-    <h2 class="text-2xl font-bold text-center">山色 Shān Sè 預先點餐</h2>
-
-    <!-- 用餐資訊 -->
-    <div class="space-y-2">
-      <label class="block font-semibold">用餐人數</label>
-      <select v-model="people" class="w-full border p-2 rounded">
-        <option disabled value="">請選擇</option>
-        <option v-for="n in 6" :key="n" :value="n">{{ n }} 位</option>
-      </select>
+  <form @submit.prevent="submitOrder">
+    <div class="space-y-4">
+      <div>
+        <label>姓名：</label>
+        <input v-model="form.name" type="text" required class="border p-2 rounded w-full" />
+      </div>
+      <div>
+        <label>用餐日期：</label>
+        <input v-model="form.date" type="date" required class="border p-2 rounded w-full" />
+      </div>
+      <div>
+        <label>主餐：</label>
+        <select v-model="form.main" required class="border p-2 rounded w-full">
+          <option disabled value="">請選擇</option>
+          <option v-for="item in mains" :key="item">{{ item }}</option>
+        </select>
+      </div>
+      <div>
+        <label>飲品：</label>
+        <select v-model="form.drink" required class="border p-2 rounded w-full">
+          <option disabled value="">請選擇</option>
+          <option v-for="item in drinks" :key="item">{{ item }}</option>
+        </select>
+      </div>
+      <div>
+        <label>副餐：</label>
+        <select v-model="form.side" required class="border p-2 rounded w-full">
+          <option disabled value="">請選擇</option>
+          <option v-for="item in sides" :key="item">{{ item }}</option>
+        </select>
+      </div>
+      <div>
+        <label>備註：</label>
+        <textarea v-model="form.note" rows="2" class="border p-2 rounded w-full"></textarea>
+      </div>
+      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+        送出訂單
+      </button>
     </div>
-
-    <div class="space-y-2">
-      <label class="block font-semibold">用餐日期</label>
-      <input type="date" v-model="date" class="w-full border p-2 rounded" />
-    </div>
-
-    <div class="space-y-2">
-      <label class="block font-semibold">用餐時段</label>
-      <select v-model="time" class="w-full border p-2 rounded">
-        <option disabled value="">請選擇</option>
-        <option>11:30–13:00</option>
-        <option>12:20–13:50</option>
-        <option>13:10–14:40</option>
-        <option>14:00–15:30</option>
-      </select>
-    </div>
-
-    <button @click="submit" class="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700">
-      提交訂單
-    </button>
-  </div>
+  </form>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 
-const people = ref('')
-const date = ref('')
-const time = ref('')
+const form = ref({
+  name: '',
+  date: '',
+  main: '',
+  drink: '',
+  side: '',
+  note: '',
+})
 
-const submit = () => {
-  alert(`人數：${people.value}, 日期：${date.value}, 時段：${time.value}`)
+const mains = ['鮮蝦蟹醬黃咖哩', '綠咖喱嫩雞', '瑪莎曼牛肋咖哩']
+const drinks = ['泰式奶茶', '芒果冰茶', '火烤椰子咖啡']
+const sides = ['南薑椰汁雞湯', '茉莉牛奶冰淇淋', '斑蘭葉豆花']
+
+const submitOrder = async () => {
+  const url = 'https://script.google.com/macros/s/AKfycbx8tHeXW4tFqtRiRuuPus8EGnS_5mWVuPHI952jVZXSVoDZm3jq9USVR---snaz1hkdWg/exec'
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(form.value),
+    })
+    alert('✅ 訂單已送出！')
+  } catch (error) {
+    alert('❌ 發送失敗，請稍後再試')
+    console.error(error)
+  }
 }
 </script>

@@ -79,5 +79,30 @@ const submitOrder = async () => {
     alert('❌ 發送失敗，請稍後再試');
     console.error('錯誤細節：', error);
   }
+};const submitOrder = async () => {
+  const url = 'https://script.google.com/macros/s/AKfycbx8tHeXW4tFqtRiRuuPus8EGnS_5mWVuPHI952jVZXSVoDZm3jq9USVR---snaz1hkdWg/exec';
+
+  // 檢查欄位
+  if (!form.value.name || !form.value.date || !form.value.main || !form.value.drink || !form.value.side) {
+    alert('⚠️ 請完整填寫所有欄位');
+    return;
+  }
+
+  try {
+    await fetch(url, {
+      method: 'POST',
+      mode: 'no-cors', // ⚠️ 避免 CORS 問題（但無法讀取回應）
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(form.value),
+    });
+
+    alert('✅ 訂單已送出！'); // 若沒錯就是成功
+  } catch (error) {
+    alert('❌ 發送失敗，請稍後再試');
+    console.error('錯誤細節：', error);
+  }
 };
+
 </script>

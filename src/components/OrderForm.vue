@@ -53,55 +53,34 @@ const form = ref({
   note: '',
 })
 
-const mains = ['鮮蝦蟹醬黃咖哩', '綠咖喱嫩雞', '瑪莎曼牛肋咖哩']
-const drinks = ['泰式奶茶', '芒果冰茶', '火烤椰子咖啡']
-const sides = ['南薑椰汁雞湯', '茉莉牛奶冰淇淋', '斑蘭葉豆花']
-
 const submitOrder = async () => {
-  const url = 'https://script.google.com/macros/s/AKfycbx8tHeXW4tFqtRiRuuPus8EGnS_5mWVuPHI952jVZXSVoDZm3jq9USVR---snaz1hkdWg/exec'
-
   if (!form.value.name || !form.value.date || !form.value.main || !form.value.drink || !form.value.side) {
     alert('⚠️ 請完整填寫所有欄位');
     return;
   }
 
-  try {
-    await fetch(url, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(form.value),
-    });
-    alert('✅ 訂單已送出（系統不回傳結果）');
-  } catch (error) {
-    alert('❌ 發送失敗，請稍後再試');
-    console.error('錯誤細節：', error);
-  }
-};const submitOrder = async () => {
-  const url = 'https://script.google.com/macros/s/AKfycbx8tHeXW4tFqtRiRuuPus8EGnS_5mWVuPHI952jVZXSVoDZm3jq9USVR---snaz1hkdWg/exec';
-
-  // 檢查欄位
-  if (!form.value.name || !form.value.date || !form.value.main || !form.value.drink || !form.value.side) {
-    alert('⚠️ 請完整填寫所有欄位');
-    return;
-  }
+  const url ='https://script.google.com/macros/s/AKfycbzX-POHnPEyoIiTTytuQUFdfq2rwgPATzwUC74ATCXBqlM6SNOvq07B7Ib8DeMFDfVL/exec';
 
   try {
-    await fetch(url, {
+    const response = await fetch(url, {
       method: 'POST',
-      mode: 'no-cors', // ⚠️ 避免 CORS 問題（但無法讀取回應）
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(form.value),
     });
 
-    alert('✅ 訂單已送出！'); // 若沒錯就是成功
+    const resultText = await response.text();
+    console.log('伺服器回應：', resultText);
+
+    if (resultText.includes('success')) {
+      alert('✅ 訂單已送出並寫入試算表！');
+    } else {
+      alert('⚠️ 無法確認是否成功寫入，請查看試算表');
+    }
   } catch (error) {
+    console.error('❌ 發送失敗：', error);
     alert('❌ 發送失敗，請稍後再試');
-    console.error('錯誤細節：', error);
   }
 };
 

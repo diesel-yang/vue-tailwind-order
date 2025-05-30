@@ -1,3 +1,46 @@
+<template>
+  <form @submit.prevent="submitOrder">
+    <div class="space-y-4">
+      <div>
+        <label>姓名：</label>
+        <input v-model="form.name" type="text" required class="border p-2 rounded w-full" />
+      </div>
+      <div>
+        <label>用餐日期：</label>
+        <input v-model="form.date" type="date" required class="border p-2 rounded w-full" />
+      </div>
+      <div>
+        <label>主餐：</label>
+        <select v-model="form.main" required class="border p-2 rounded w-full">
+          <option disabled value="">請選擇</option>
+          <option v-for="item in mains" :key="item">{{ item }}</option>
+        </select>
+      </div>
+      <div>
+        <label>飲品：</label>
+        <select v-model="form.drink" required class="border p-2 rounded w-full">
+          <option disabled value="">請選擇</option>
+          <option v-for="item in drinks" :key="item">{{ item }}</option>
+        </select>
+      </div>
+      <div>
+        <label>副餐：</label>
+        <select v-model="form.side" required class="border p-2 rounded w-full">
+          <option disabled value="">請選擇</option>
+          <option v-for="item in sides" :key="item">{{ item }}</option>
+        </select>
+      </div>
+      <div>
+        <label>備註：</label>
+        <textarea v-model="form.note" rows="2" class="border p-2 rounded w-full"></textarea>
+      </div>
+      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+        送出訂單
+      </button>
+    </div>
+  </form>
+</template>
+
 <script setup>
 import { ref } from 'vue'
 
